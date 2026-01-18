@@ -12,8 +12,6 @@ services:
         sync: false
       - key: JWT_SECRET
         sync: false
-      - key: CLIENT_URL
-        sync: false
       - key: CLOUDINARY_CLOUD_NAME
         sync: false
       - key: CLOUDINARY_API_KEY
@@ -24,28 +22,3 @@ services:
         sync: false
       - key: GOOGLE_CLIENT_SECRET
         sync: false
-        
-  - type: web
-    name: bin-frontend
-    env: static
-    rootDir: Frontend
-    buildCommand: npm install && npm run build
-    staticPublishPath: ./dist
-    envVars:
-      - key: VITE_BASE_URL
-        fromService:
-          type: web
-          name: bin-backend
-          envVar: url  # Render exposes the service URL as 'url' (or we can use internal address but for frontend public access needs public url)
-          # Actually Render Blueprints for static sites might not support 'fromService' for build time env vars easily if they are not in same service group, but they are here.
-          # Let's hope this works, otherwise User has to set it manually.
-          # Correct way to reference another service's URL in Render Blueprint:
-          # value: https://bin-backend.onrender.com (But we don't know the name yet)
-          # best is to let user set it or use Render's service discovery env vars?
-          # Static sites are built once. Use a placeholder or ask user to set it.
-          # Actually, 'fromService' works for linking.
-          
-    routes:
-      - type: rewrite
-        source: /*
-        destination: /index.html
