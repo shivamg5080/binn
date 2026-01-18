@@ -67,11 +67,8 @@ app.use(cookieparser()); //Parses cookies from the request and makes them availa
 app.get("/", rateLimiter(MINUTE, 5), (req, res) => {
   res.send("Hello World!");
 });
-app.get("/api", rateLimiter(MINUTE, 5), (req, res) => {
-  res.send("Hello World API!");
-});
-app.use("/api/users", userRouter);
-app.use("/api/email", emailRouter);
-app.use("/api/asset", assetRouter);
+app.use("/users", userRouter);
+app.use("/email", emailRouter);
+app.use("/asset", assetRouter);
 
 export default app;
