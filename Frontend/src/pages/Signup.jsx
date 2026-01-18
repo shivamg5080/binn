@@ -79,7 +79,7 @@ const Signup = () => {
       const userData = { name, email, password };
 
       const response = await axios.post(
-        `${import.meta.env.VITE_BASE_URL}/users/register`,
+        `${import.meta.env.VITE_BASE_URL || "/api"}/users/register`,
         userData
       );
 
@@ -206,9 +206,8 @@ const Signup = () => {
         Already have an account?
         <button
           disabled={loading}
-          className={`text-[#4294FF] font-medium ${
-            !loading ? "cursor-pointer" : ""
-          }`}
+          className={`text-[#4294FF] font-medium ${!loading ? "cursor-pointer" : ""
+            }`}
         >
           {!loading ? <Link to="/auth/signin">Signin</Link> : "Signin"}
         </button>

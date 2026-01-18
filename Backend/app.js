@@ -48,9 +48,9 @@ app.use(
         // Let's rely on CLIENT_URL being set, OR allow all if not prod.
         // I will change it to return true if origin is in allowedOrigins.
         if (allowedOrigins.includes(origin)) {
-            callback(null, true);
+          callback(null, true);
         } else {
-            callback(new Error('Not allowed by CORS'));
+          callback(new Error('Not allowed by CORS'));
         }
       }
     },
@@ -67,8 +67,11 @@ app.use(cookieparser()); //Parses cookies from the request and makes them availa
 app.get("/", rateLimiter(MINUTE, 5), (req, res) => {
   res.send("Hello World!");
 });
-app.use("/users", userRouter);
-app.use("/email", emailRouter);
-app.use("/asset", assetRouter);
+app.get("/api", rateLimiter(MINUTE, 5), (req, res) => {
+  res.send("Hello World API!");
+});
+app.use("/api/users", userRouter);
+app.use("/api/email", emailRouter);
+app.use("/api/asset", assetRouter);
 
 export default app;

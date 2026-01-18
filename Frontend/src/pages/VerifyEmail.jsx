@@ -52,7 +52,7 @@ const VerifyEmail = () => {
 
       const userData = { token: otp };
       const response = await axios.post(
-        `${import.meta.env.VITE_BASE_URL}/email/verify`,
+        `${import.meta.env.VITE_BASE_URL || "/api"}/email/verify`,
         userData,
         {
           withCredentials: true, // enable sending cookies
@@ -94,7 +94,7 @@ const VerifyEmail = () => {
       setIsResending(true);
       await delay(1000); // Wait for 1 second
       const response = await axios.post(
-        `${import.meta.env.VITE_BASE_URL}/email/verification-token`,
+        `${import.meta.env.VITE_BASE_URL || "/api"}/email/verification-token`,
         {},
         {
           withCredentials: true, // enable sending cookies
@@ -182,11 +182,10 @@ const VerifyEmail = () => {
           Didn't receive an email?
           <button
             // className="text-[#4294FF] cursor-pointer font-medium"
-            className={`text-[#4294FF] font-medium ${
-              loading || isResending
+            className={`text-[#4294FF] font-medium ${loading || isResending
                 ? "opacity-50 cursor-not-allowed"
                 : "cursor-pointer"
-            }`}
+              }`}
             onClick={handleResendOtp}
             disabled={loading || isResending}
           >

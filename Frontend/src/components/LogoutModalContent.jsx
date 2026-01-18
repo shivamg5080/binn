@@ -18,7 +18,7 @@ const LogoutModalContent = ({ closeModal }) => {
       await delay(1000); // Wait for 1 second
 
       const response = await axios.post(
-        `${import.meta.env.VITE_BASE_URL}/users/logout`,
+        `${import.meta.env.VITE_BASE_URL || "/api"}/users/logout`,
         {},
         {
           headers: {

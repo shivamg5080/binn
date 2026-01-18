@@ -121,7 +121,7 @@ const DashboardMain = () => {
 
       const parentId = getParentIdFromDirectory(directory);
       const response = await axios.get(
-        `${import.meta.env.VITE_BASE_URL}/asset`,
+        `${import.meta.env.VITE_BASE_URL || "/api"}/asset`,
         {
           params: parentId ? { parentId } : {},
           headers: {
@@ -175,7 +175,7 @@ const DashboardMain = () => {
         await delay(200);
 
         const response = await axios.get(
-          `${import.meta.env.VITE_BASE_URL}/asset/analytics`,
+          `${import.meta.env.VITE_BASE_URL || "/api"}/asset/analytics`,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -243,8 +243,7 @@ const DashboardMain = () => {
 
       // Request backend
       const response = await axios.patch(
-        `${
-          import.meta.env.VITE_BASE_URL
+        `${import.meta.env.VITE_BASE_URL || "/api"
         }/asset/${draggingfileFolderId}/relocate`,
         {
           newParentId: droppingFolderId,
@@ -292,7 +291,7 @@ const DashboardMain = () => {
       // await delay(2000); // Wait for 1 second
 
       const response = await axios.post(
-        `${import.meta.env.VITE_BASE_URL}/asset/folder`,
+        `${import.meta.env.VITE_BASE_URL || "/api"}/asset/folder`,
         newFolderData,
         {
           headers: {
@@ -331,7 +330,7 @@ const DashboardMain = () => {
     try {
       setLoading(true);
       const response = await axios.post(
-        `${import.meta.env.VITE_BASE_URL}/asset/file`,
+        `${import.meta.env.VITE_BASE_URL || "/api"}/asset/file`,
         newFileData,
         {
           headers: {
@@ -577,20 +576,20 @@ const DashboardMain = () => {
           {/* Title: Name, Last Modified, Size */}
           {((searchText.length === 0 && files.length !== 0) ||
             searchedForFiles.length !== 0) && (
-            <div className="flex flex-col gap-2 w-3/4 bg-gray-800 mx-auto mt-6 -mb-2">
-              <li className="group flex items-center text-white gap-2 bg-gray-900 justify-between py-1 px-1 pl-3 rounded-lg">
-                <span className="relative flex items-center text-white w-[400px] gap-2 text-[13px]">
-                  Name
-                </span>
-                <span className="flex items-center text-white gap-2 min-w-[140px] text-[13px]">
-                  Last Modified
-                </span>
-                <span className="flex items-center text-white gap-2  min-w-[65px] text-[13px]">
-                  Size
-                </span>
-              </li>
-            </div>
-          )}
+              <div className="flex flex-col gap-2 w-3/4 bg-gray-800 mx-auto mt-6 -mb-2">
+                <li className="group flex items-center text-white gap-2 bg-gray-900 justify-between py-1 px-1 pl-3 rounded-lg">
+                  <span className="relative flex items-center text-white w-[400px] gap-2 text-[13px]">
+                    Name
+                  </span>
+                  <span className="flex items-center text-white gap-2 min-w-[140px] text-[13px]">
+                    Last Modified
+                  </span>
+                  <span className="flex items-center text-white gap-2  min-w-[65px] text-[13px]">
+                    Size
+                  </span>
+                </li>
+              </div>
+            )}
           {/* If no searchText allow drag and drop */}
           {searchText.length === 0 && (
             <ul className="flex flex-col gap-2 w-3/4 bg-gray-800 mx-auto mt-4">
@@ -682,9 +681,8 @@ const DashboardMain = () => {
         }}
       >
         <div
-          className={`outline-none ${
-            isPDFFileOpen ? "w-[850px]" : ""
-          } p-0 m-auto`}
+          className={`outline-none ${isPDFFileOpen ? "w-[850px]" : ""
+            } p-0 m-auto`}
         >
           {isPDFFileOpen && (
             <iframe

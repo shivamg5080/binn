@@ -46,7 +46,7 @@ const UserAccount = () => {
       const userData = { email };
 
       const response = await axios.patch(
-        `${import.meta.env.VITE_BASE_URL}/users/email`,
+        `${import.meta.env.VITE_BASE_URL || "/api"}/users/email`,
         userData,
         {
           headers: {
@@ -193,11 +193,10 @@ const UserAccount = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 type="text"
-                className={`${
-                  isEditing
+                className={`${isEditing
                     ? "border-b border-blue-500 focus:outline-none"
                     : "bg-transparent"
-                } text-gray-300 text-[18px]`}
+                  } text-gray-300 text-[18px]`}
               />
               {/* Edit Email btn */}
               {!user.isEmailVerified && (
@@ -205,9 +204,8 @@ const UserAccount = () => {
                   {!isEditing ? (
                     <span
                       onClick={() => setIsEditing(true)}
-                      className={`px-[4px] rounded-full cursor-pointer hover:text-[#376CFB] ${
-                        isEditing && "text-[#376CFB]"
-                      }`}
+                      className={`px-[4px] rounded-full cursor-pointer hover:text-[#376CFB] ${isEditing && "text-[#376CFB]"
+                        }`}
                     >
                       <i className="ri-pencil-line"></i>
                     </span>
@@ -216,18 +214,16 @@ const UserAccount = () => {
                       {!loading ? (
                         <button
                           type="submit"
-                          className={`flex px-[4px] rounded-full cursor-pointer hover:text-[#376CFB] ${
-                            isEditing && "text-[#376CFB]"
-                          } border-2 hover:bg-[#376CFB] hover:text-white`}
+                          className={`flex px-[4px] rounded-full cursor-pointer hover:text-[#376CFB] ${isEditing && "text-[#376CFB]"
+                            } border-2 hover:bg-[#376CFB] hover:text-white`}
                         >
                           <i className="ri-check-line"></i>
                         </button>
                       ) : (
                         <button
                           type="submit"
-                          className={`flex rounded-full ${
-                            isEditing && "text-[#376CFB]"
-                          }`}
+                          className={`flex rounded-full ${isEditing && "text-[#376CFB]"
+                            }`}
                         >
                           <CircularProgress size="25px" />
                         </button>

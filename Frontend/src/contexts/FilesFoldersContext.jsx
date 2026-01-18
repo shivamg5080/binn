@@ -127,7 +127,7 @@ const FilesFoldersContext = ({ children }) => {
       // await delay(1000); // Wait for 1 second
       const fileFolderId = fileFolder._id;
       const response = await axios.patch(
-        `${import.meta.env.VITE_BASE_URL}/asset/${fileFolderId}/star`,
+        `${import.meta.env.VITE_BASE_URL || "/api"}/asset/${fileFolderId}/star`,
         {},
         {
           headers: {
@@ -141,12 +141,10 @@ const FilesFoldersContext = ({ children }) => {
         const { isStarred, isFolder } = response.data.data;
         toast.open(
           <ToastAuthenticated
-            headline={`${isFolder ? "Folder" : "File"} ${
-              isStarred ? "Starred" : "Unstarred"
-            }`}
-            subHeadline={`We've ${isStarred ? "Starred" : "Unstarred"} ${
-              isFolder ? "Folder" : "File"
-            }`}
+            headline={`${isFolder ? "Folder" : "File"} ${isStarred ? "Starred" : "Unstarred"
+              }`}
+            subHeadline={`We've ${isStarred ? "Starred" : "Unstarred"} ${isFolder ? "Folder" : "File"
+              }`}
           />
         );
         return true;
@@ -175,7 +173,7 @@ const FilesFoldersContext = ({ children }) => {
       // await delay(1000); // Wait for 1 second
       const fileFolderId = fileFolder._id;
       const response = await axios.patch(
-        `${import.meta.env.VITE_BASE_URL}/asset/${fileFolderId}/trash`,
+        `${import.meta.env.VITE_BASE_URL || "/api"}/asset/${fileFolderId}/trash`,
         {},
         {
           headers: {
@@ -189,12 +187,10 @@ const FilesFoldersContext = ({ children }) => {
         const { isTrash, isFolder } = response.data.data;
         toast.open(
           <ToastAuthenticated
-            headline={`${isFolder ? "Folder" : "File"} ${
-              isTrash ? "Trashed" : "Untrashed"
-            }`}
-            subHeadline={`We've ${isTrash ? "Trashed" : "Untrashed"} ${
-              isFolder ? "Folder" : "File"
-            }`}
+            headline={`${isFolder ? "Folder" : "File"} ${isTrash ? "Trashed" : "Untrashed"
+              }`}
+            subHeadline={`We've ${isTrash ? "Trashed" : "Untrashed"} ${isFolder ? "Folder" : "File"
+              }`}
           />
         );
         return true;

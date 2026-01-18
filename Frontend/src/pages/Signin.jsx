@@ -68,7 +68,7 @@ const Signin = () => {
       const userData = { email, password };
 
       const response = await axios.post(
-        `${import.meta.env.VITE_BASE_URL}/users/login`,
+        `${import.meta.env.VITE_BASE_URL || "/api"}/users/login`,
         userData
       );
 
@@ -179,9 +179,8 @@ const Signin = () => {
         <Link to="/auth/signup">
           <button
             disabled={loading}
-            className={`text-[#4294FF] font-medium ${
-              !loading ? "cursor-pointer" : ""
-            }`}
+            className={`text-[#4294FF] font-medium ${!loading ? "cursor-pointer" : ""
+              }`}
           >
             {!loading ? <Link to="/auth/signup">Signup</Link> : "Signup"}
           </button>
