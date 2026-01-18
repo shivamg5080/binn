@@ -1,15 +1,5 @@
 {
     "buildCommand": "cd Frontend && npm install && npm run build",
     "outputDirectory": "Frontend/dist",
-    "rewrites": [
-        {
-            "source": "/api/:path*",
-            "destination": "/api"
-        }
-    ],
-    "functions": {
-        "api/index.js": {
-            "runtime": "nodejs20.x"
-        }
-    }
+    "framework": "vite"
 }
