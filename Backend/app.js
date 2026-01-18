@@ -13,55 +13,46 @@ import {
 
 const app = express();
 
-// Connect to the database
-dbConnect();
+// Database connection promise (for serverless)
+let dbConnected = false;
+const ensureDbConnected = async () => {
+  if (!dbConnected) {
+    await dbConnect();
+    dbConnected = true;
+  }
+};
 
-// Cron-job
-setInterval(
-  cronJobForAutoDeletionFromRecycleBinParmanently,
-  CRON_JOB_AUTO_DELETE_TRASH_TIME
-);
+// Ensure DB is connected before handling requests
+app.use(async (req, res, next) => {
+  try {
+    await ensureDbConnected();
+    next();
+  } catch (error) {
+    res.status(500).json({ error: "Database connection failed" });
+  }
+});
 
-// Middlewares
-// app.use(cors()); // Cross-Origin Resource Sharing
-const allowedOrigins = [
-  "http://localhost:5173",
-  "https://project-bin.netlify.app",
-  process.env.CLIENT_URL, // Allow configured client URL
-];
+// Cron-job (only run in non-serverless environment)
+if (process.env.NODE_ENV !== "production") {
+  setInterval(
+    cronJobForAutoDeletionFromRecycleBinParmanently,
+    CRON_JOB_AUTO_DELETE_TRASH_TIME
+  );
+}
 
+// CORS - Allow all origins for now (simplest fix)
 app.use(
   cors({
-    origin: (origin, callback) => {
-      // Allow requests with no origin (like mobile apps or curl requests)
-      if (!origin) return callback(null, true);
-      if (allowedOrigins.indexOf(origin) !== -1 || !process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
-        callback(null, true);
-      } else {
-        // Ideally we should block, but for "make it live" generic deploy, maybe be permissive or just log.
-        // But better to stick to allowedOrigins.
-        // Wait, if I deploy frontend to Vercel, I don't know the URL yet!
-        // So I should allow ALL origins or ask user to set CLIENT_URL.
-        // I'll stick to dynamic check. 
-        // Actually, if I don't know the URL, I can't add it to allowedOrigins.
-        // Safest for "just make it work" is to allow all if CLIENT_URL is not set or match it.
-        // Let's rely on CLIENT_URL being set, OR allow all if not prod.
-        // I will change it to return true if origin is in allowedOrigins.
-        if (allowedOrigins.includes(origin)) {
-          callback(null, true);
-        } else {
-          callback(new Error('Not allowed by CORS'));
-        }
-      }
-    },
-    credentials: true, // allow cookies/auth headers
+    origin: true, // Allow all origins
+    credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
-app.use(express.json()); //Parses JSON request bodies into req.body
-app.use(express.urlencoded({ extended: true })); //Parses URL-encoded form data (e.g., from HTML forms) into req.body.
-app.use(cookieparser()); //Parses cookies from the request and makes them available in req.cookies
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieparser());
 
 // Routes
 app.get("/", rateLimiter(MINUTE, 5), (req, res) => {
